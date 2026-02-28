@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lowe's Strategic Re-Rating | Bain & Company</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');
+
+  :root {
+    --bain-red: #CC0000;
+    --bain-dark: #1A1A1A;
+    --bain-charcoal: #2D2D2D;
+    --bain-slate: #4A4A4A;
+    --bain-silver: #8C8C8C;
+    --bain-light: #F5F4F0;
+    --bain-cream: #FAF9F6;
+    --grid-line: rgba(0,0,0,0.06);
+    --accent-gold: #B8963E;
+    --lowes-blue: #004990;
+    --lowes-move: #E8A020;
+    --hd-orange: #F96302;
+    --ferg-green: #2E7D32;
+    --bldr-teal: #00695C;
+    --amazon-navy: #131921;
+    --ace-maroon: #6D1F1F;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bain-cream);
+    color: var(--bain-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SLIDE SHELL ── */
+  .slide {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    padding: 32px 48px 24px;
+    border-bottom: 3px solid var(--bain-red);
+    background: white;
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--bain-light);
+  }
+
+  .bain-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--bain-red);
+    text-transform: uppercase;
+    border: 2px solid var(--bain-red);
+    padding: 6px 14px;
+    align-self: center;
+  }
+
+  .headline-block { max-width: 860px; }
+
+  .slide-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--bain-red);
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 2.4vw, 30px);
+    font-weight: 900;
+    line-height: 1.12;
+    color: var(--bain-dark);
+    margin-bottom: 10px;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--bain-red);
+  }
+
+  .answer-line {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--bain-slate);
+    line-height: 1.55;
+    max-width: 720px;
+    border-left: 3px solid var(--bain-red);
+    padding-left: 14px;
+  }
+  .answer-line strong { color: var(--bain-dark); font-weight: 600; }
+
+  /* ── BODY ── */
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 0;
+    padding: 0;
+    background: var(--bain-cream);
+  }
+
+  /* ── CHART PANEL ── */
+  .chart-panel {
+    padding: 32px 32px 24px 48px;
+    position: relative;
+  }
+
+  .chart-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bain-silver);
+    margin-bottom: 20px;
+  }
+
+  svg.cluster-map {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    background: white;
+    border-left: 1px solid #E8E6E0;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .panel-section-title {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--bain-red);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #EEE;
+  }
+
+  /* Valuation Bridge */
+  .val-bridge {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .val-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+  }
+  .val-row .label { color: var(--bain-slate); line-height: 1.3; }
+  .val-row .pe { font-weight: 700; font-size: 13px; color: var(--bain-dark); text-align: right; }
+  .val-row .delta { font-size: 10px; font-weight: 600; text-align: right; min-width: 40px; }
+
+  .val-row.current .pe { color: var(--lowes-blue); }
+  .val-row.target .pe { color: var(--ferg-green); }
+  .val-row.delta-row {
+    background: #FFF8E1;
+    border: 1px solid #FFE082;
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin-top: 2px;
+  }
+  .val-row.delta-row .label { font-weight: 600; color: var(--bain-dark); }
+  .val-row.delta-row .pe { color: var(--accent-gold); font-size: 15px; }
+
+  .implied-upside {
+    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-top: 4px;
+    text-align: center;
+  }
+  .implied-upside .big { font-size: 22px; font-weight: 800; color: var(--ferg-green); font-family: 'Playfair Display', serif; }
+  .implied-upside .sub { font-size: 9px; color: var(--bain-slate); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+
+  /* Barriers */
+  .barriers { display: flex; flex-direction: column; gap: 10px; }
+
+  .barrier-card {
+    border-left: 3px solid var(--bain-red);
+    padding: 8px 10px;
+    background: #FAFAFA;
+    border-radius: 0 4px 4px 0;
+  }
+  .barrier-num {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--bain-red);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .barrier-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--bain-dark);
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .barrier-body {
+    font-size: 10px;
+    color: var(--bain-slate);
+    line-height: 1.45;
+  }
+
+  /* Legend */
+  .legend-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10.5px;
+    color: var(--bain-slate);
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+  .legend-item span { font-weight: 500; }
+  .legend-item small { color: var(--bain-silver); font-size: 9.5px; margin-left: auto; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: white;
+    border-top: 1px solid #E8E6E0;
+    padding: 12px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-note {
+    font-size: 9px;
+    color: var(--bain-silver);
+    letter-spacing: 0.05em;
+  }
+  .footer-conf {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--bain-red);
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: white;
+    border: 1px solid #E0E0E0;
+    border-left: 3px solid var(--bain-red);
+    border-radius: 4px;
+    padding: 10px 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    font-size: 11px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    min-width: 180px;
+    max-width: 240px;
+  }
+  .tooltip.visible { opacity: 1; }
+  .tt-name { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+  .tt-row { display: flex; justify-content: space-between; color: var(--bain-slate); margin-bottom: 2px; }
+  .tt-row strong { color: var(--bain-dark); }
+
+  /* Cluster labels */
+  .cluster-bg {
+    rx: 8;
+    ry: 8;
+    opacity: 0.05;
+  }
+
+  /* Pulse animation on Lowe's 2030 target */
+  @keyframes pulse {
+    0%, 100% { opacity: 0.35; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+  }
+  .pulse-ring { animation: pulse 2.5s ease-in-out infinite; transform-origin: 350px 175px; }
+
+  @keyframes dash {
+    to { stroke-dashoffset: 0; }
+  }
+  .arrow-path {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation: dash 1.8s ease forwards 0.5s;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="headline-block">
+      <div class="slide-label">Strategic Group Map · Home Improvement & Adjacent Industries · Feb 2026</div>
+      <h1>Lowe's Is Migrating From <em>Cyclical Retail</em><br>to <em>Specialized Industrial Infrastructure</em></h1>
+      <p class="answer-line">
+        The FBM + ADG acquisitions ($10.1B deployed) structurally shift Lowe's Pro mix from <strong>19% → ~36–40%</strong> and vertical integration depth from store-only fulfillment to a <strong>530-branch distribution network</strong> — justifying a re-rating from a retail P/E (~21x) toward an industrial/distributor P/E (~25x+), implying <strong>~19% stock upside</strong> at current earnings.
+      </p>
+    </div>
+    <div class="bain-logo">Bain &amp; Co.</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- CHART -->
+    <div class="chart-panel">
+      <div class="chart-title">Strategic Cluster Map — Service Complexity vs. Vertical Integration Depth (Bubble = Market Cap Scale)</div>
+
+      <svg class="cluster-map" viewBox="0 0 760 480" xmlns="http://www.w3.org/2000/svg" id="chart">
+
+        <!-- Defs -->
+        <defs>
+          <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#E8A020" opacity="0.9"/>
+          </marker>
+          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.12"/>
+          </filter>
+          <linearGradient id="lowesGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#1565C0;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#004990;stop-opacity:1" />
+          </linearGradient>
+          <linearGradient id="targetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#F0A500;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#B8963E;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+
+        <!-- CLUSTER ZONES -->
+        <!-- Zone 1: Cyclical DIY Retail -->
+        <rect x="28" y="270" width="220" height="175" rx="10" fill="#CC0000" opacity="0.04" stroke="#CC0000" stroke-width="1" stroke-dasharray="5,4" opacity="0.08"/>
+        <text x="38" y="290" font-family="DM Sans" font-size="9" font-weight="700" fill="#CC0000" opacity="0.55" letter-spacing="0.12em" text-transform="uppercase">CYCLICAL DIY RETAIL</text>
+
+        <!-- Zone 2: Hybrid Pro/DIY Retail -->
+        <rect x="200" y="80" width="240" height="250" rx="10" fill="#1565C0" opacity="0.03" stroke="#1565C0" stroke-width="1" stroke-dasharray="5,4" opacity="0.08"/>
+        <text x="210" y="100" font-family="DM Sans" font-size="9" font-weight="700" fill="#1565C0" opacity="0.55" letter-spacing="0.12em">PRO-HYBRID RETAIL</text>
+
+        <!-- Zone 3: Specialized Distribution -->
+        <rect x="430" y="40" width="295" height="220" rx="10" fill="#2E7D32" opacity="0.04" stroke="#2E7D32" stroke-width="1" stroke-dasharray="5,4" opacity="0.08"/>
+        <text x="442" y="60" font-family="DM Sans" font-size="9" font-weight="700" fill="#2E7D32" opacity="0.55" letter-spacing="0.12em">SPECIALIZED DISTRIBUTION</text>
+
+        <!-- Zone 4: Online/Mass Retail -->
+        <rect x="28" y="30" width="180" height="230" rx="10" fill="#37474F" opacity="0.03" stroke="#37474F" stroke-width="1" stroke-dasharray="5,4" opacity="0.06"/>
+        <text x="38" y="50" font-family="DM Sans" font-size="9" font-weight="700" fill="#37474F" opacity="0.45" letter-spacing="0.12em">ONLINE / MASS RETAIL</text>
+
+        <!-- ── AXES ── -->
+        <!-- Y Axis -->
+        <line x1="58" y1="20" x2="58" y2="450" stroke="#1A1A1A" stroke-width="1.5" opacity="0.3"/>
+        <!-- X Axis -->
+        <line x1="58" y1="450" x2="740" y2="450" stroke="#1A1A1A" stroke-width="1.5" opacity="0.3"/>
+
+        <!-- Grid lines horizontal -->
+        <line x1="58" y1="113" x2="740" y2="113" stroke="#E0E0E0" stroke-width="0.8" stroke-dasharray="4,4"/>
+        <line x1="58" y1="197" x2="740" y2="197" stroke="#E0E0E0" stroke-width="0.8" stroke-dasharray="4,4"/>
+        <line x1="58" y1="280" x2="740" y2="280" stroke="#E0E0E0" stroke-width="0.8" stroke-dasharray="4,4"/>
+        <line x1="58" y1="367" x2="740" y2="367" stroke="#E0E0E0" stroke-width="0.8" stroke-dasharray="4,4"/>
+
+        <!-- Grid lines vertical -->
+        <line x1="228" y1="20" x2="228" y2="450" stroke="#E0E0E0" stroke-width="0.8" stroke-dasharray="4,4"/>
+        <line x1="398" y1="20" x2="398" y2="450" stroke="#E0E0E0" stroke-width="0.8" stroke-dasharray="4,4"/>
+        <line x1="568" y1="20" x2="568" y2="450" stroke="#E0E0E0" stroke-width="0.8" stroke-dasharray="4,4"/>
+        <line x1="738" y1="20" x2="738" y2="450" stroke="#E0E0E0" stroke-width="0.8" stroke-dasharray="4,4"/>
+
+        <!-- Y Axis Labels -->
+        <text x="52" y="117" font-family="DM Sans" font-size="9" fill="#8C8C8C" text-anchor="end">25</text>
+        <text x="52" y="201" font-family="DM Sans" font-size="9" fill="#8C8C8C" text-anchor="end">50</text>
+        <text x="52" y="284" font-family="DM Sans" font-size="9" fill="#8C8C8C" text-anchor="end">75</text>
+        <text x="52" y="371" font-family="DM Sans" font-size="9" fill="#8C8C8C" text-anchor="end">100</text>
+
+        <!-- X Axis Labels -->
+        <text x="228" y="466" font-family="DM Sans" font-size="9" fill="#8C8C8C" text-anchor="middle">25</text>
+        <text x="398" y="466" font-family="DM Sans" font-size="9" fill="#8C8C8C" text-anchor="middle">50</text>
+        <text x="568" y="466" font-family="DM Sans" font-size="9" fill="#8C8C8C" text-anchor="middle">75</text>
+        <text x="738" y="466" font-family="DM Sans" font-size="9" fill="#8C8C8C" text-anchor="middle">100</text>
+
+        <!-- Axis Titles -->
+        <text x="399" y="478" font-family="DM Sans" font-size="10" font-weight="600" fill="#4A4A4A" text-anchor="middle" letter-spacing="0.08em">SERVICE &amp; CUSTOMER COMPLEXITY →</text>
+        <text transform="rotate(-90, 14, 235)" x="14" y="235" font-family="DM Sans" font-size="10" font-weight="600" fill="#4A4A4A" text-anchor="middle" letter-spacing="0.08em">VERTICAL INTEGRATION DEPTH →</text>
+        <text x="14" y="460" font-family="DM Sans" font-size="8" fill="#8C8C8C" text-anchor="middle">DIY</text>
+        <text x="14" y="30" font-family="DM Sans" font-size="8" fill="#8C8C8C" text-anchor="middle">Owned</text>
+
+        <!-- ════════════════════════════════════════════════ -->
+        <!-- BUBBLES -->
+
+        <!-- Walmart / Target cluster (Mass Retail) — small-medium -->
+        <!-- Walmart: x=10, y=5 → chart x=228*0.10+58=80.8, y=450-(430*0.05)=428.5 -->
+        <circle cx="96" cy="405" r="28" fill="#455A64" opacity="0.18" filter="url(#shadow)"
+          class="bubble" data-name="Walmart / Target" data-pro="&lt;5%" data-int="Low" data-pe="22–24x" data-mkt="~$500B+"/>
+        <text x="96" y="402" font-family="DM Sans" font-size="8.5" font-weight="600" fill="#37474F" text-anchor="middle">Walmart</text>
+        <text x="96" y="413" font-family="DM Sans" font-size="7.5" fill="#546E7A" text-anchor="middle">/ Target</text>
+
+        <!-- Amazon: x=18, y=8 -->
+        <circle cx="126" cy="385" r="32" fill="#131921" opacity="0.15" filter="url(#shadow)"
+          class="bubble" data-name="Amazon" data-pro="~10%" data-int="Low–Med" data-pe="35–40x" data-mkt="~$2.1T"/>
+        <text x="126" y="382" font-family="DM Sans" font-size="9" font-weight="700" fill="#1A1A1A" text-anchor="middle">Amazon</text>
+        <text x="126" y="394" font-family="DM Sans" font-size="7.5" fill="#546E7A" text-anchor="middle">35–40x P/E</text>
+
+        <!-- Ace Hardware: x=22, y=20 -->
+        <circle cx="148" cy="362" r="14" fill="#6D1F1F" opacity="0.55" filter="url(#shadow)"
+          class="bubble" data-name="Ace Hardware" data-pro="~30%" data-int="Low" data-pe="Private" data-mkt="~Private"/>
+        <text x="148" y="359" font-family="DM Sans" font-size="7.5" font-weight="600" fill="white" text-anchor="middle">Ace</text>
+        <text x="148" y="369" font-family="DM Sans" font-size="6.5" fill="rgba(255,255,255,0.8)" text-anchor="middle">Hardware</text>
+
+        <!-- Wayfair: x=12, y=10 -->
+        <circle cx="104" cy="357" r="12" fill="#7B1FA2" opacity="0.55" filter="url(#shadow)"
+          class="bubble" data-name="Wayfair" data-pro="~5%" data-int="Low" data-pe="N/M" data-mkt="~$7B"/>
+        <text x="104" y="354" font-family="DM Sans" font-size="7" font-weight="600" fill="white" text-anchor="middle">Wayfair</text>
+        <text x="104" y="363" font-family="DM Sans" font-size="6" fill="rgba(255,255,255,0.8)" text-anchor="middle">N/M P/E</text>
+
+        <!-- LOWE'S 2018 BASELINE: Pro=19%, Int=Low-Med → x=22, y=28 -->
+        <circle cx="154" cy="345" r="30" fill="#90CAF9" opacity="0.4" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="5,3" filter="url(#shadow)"
+          class="bubble" data-name="Lowe's (2018 Baseline)" data-pro="19%" data-int="Low" data-pe="~14x" data-mkt="~$80B"/>
+        <text x="154" y="341" font-family="DM Sans" font-size="8.5" font-weight="600" fill="#0D47A1" text-anchor="middle">LOW</text>
+        <text x="154" y="352" font-family="DM Sans" font-size="7.5" fill="#1565C0" text-anchor="middle">2018</text>
+        <text x="154" y="362" font-family="DM Sans" font-size="7" fill="#1565C0" text-anchor="middle">14x P/E</text>
+
+        <!-- LOWE'S 2026 CURRENT: Pro=30–36%, Int=Med-High → x=48, y=48 -->
+        <circle cx="247" cy="235" r="42" fill="url(#lowesGrad)" opacity="0.85" filter="url(#shadow)"
+          class="bubble" data-name="Lowe's (2026 Current)" data-pro="~36–40% (consolidated)" data-int="Medium–High (530 branches)" data-pe="~21x" data-mkt="~$148B"/>
+        <text x="247" y="228" font-family="DM Sans" font-size="11" font-weight="700" fill="white" text-anchor="middle">LOW</text>
+        <text x="247" y="241" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.85)" text-anchor="middle">2026</text>
+        <text x="247" y="254" font-family="DM Sans" font-size="8.5" fill="rgba(255,255,255,0.75)" text-anchor="middle">~21x P/E</text>
+
+        <!-- HOME DEPOT: Pro=50%+, Int=High → x=64, y=60 -->
+        <circle cx="333" cy="173" r="58" fill="#F96302" opacity="0.78" filter="url(#shadow)"
+          class="bubble" data-name="Home Depot (HD)" data-pro="~50%+ (enterprise)" data-int="High (SRS + GMS)" data-pe="~25x" data-mkt="~$380B"/>
+        <text x="333" y="166" font-family="DM Sans" font-size="12" font-weight="700" fill="white" text-anchor="middle">HOME</text>
+        <text x="333" y="180" font-family="DM Sans" font-size="12" font-weight="700" fill="white" text-anchor="middle">DEPOT</text>
+        <text x="333" y="194" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.85)" text-anchor="middle">~25x P/E · $380B</text>
+
+        <!-- LOWE'S 2030 TARGET (pulse ring + bubble) -->
+        <circle cx="430" cy="145" r="46" fill="#FFF3E0" opacity="0.3" stroke="#E8A020" stroke-width="2" stroke-dasharray="8,4" class="pulse-ring"/>
+        <circle cx="430" cy="145" r="34" fill="url(#targetGrad)" opacity="0.75" filter="url(#shadow)"
+          class="bubble" data-name="Lowe's (2030 Target)" data-pro="~45–50%" data-int="High (full FBM+ADG)" data-pe="~25x+" data-mkt="~$200B+"/>
+        <text x="430" y="138" font-family="DM Sans" font-size="10" font-weight="700" fill="white" text-anchor="middle">LOW</text>
+        <text x="430" y="150" font-family="DM Sans" font-size="8.5" fill="rgba(255,255,255,0.9)" text-anchor="middle">2030 Target</text>
+        <text x="430" y="162" font-family="DM Sans" font-size="8" fill="rgba(255,255,255,0.8)" text-anchor="middle">~25x P/E</text>
+
+        <!-- STRATEGIC VECTOR ARROW: 2018 → 2026 → 2030 -->
+        <path class="arrow-path" d="M 174 328 Q 200 290 230 260" stroke="#1565C0" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrowhead)" opacity="0.5"/>
+        <path class="arrow-path" d="M 262 205 Q 335 175 398 155" stroke="#E8A020" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrowhead)" stroke-dasharray="6,3" opacity="0.85"/>
+
+        <!-- TRAJECTORY LABEL -->
+        <text x="310" y="165" font-family="DM Sans" font-size="8.5" font-weight="600" fill="#B8963E" transform="rotate(-18, 310, 165)">Strategic Vector →</text>
+
+        <!-- FERGUSON: Pro=100%, Int=High → x=78, y=78 -->
+        <circle cx="537" cy="105" r="38" fill="#2E7D32" opacity="0.82" filter="url(#shadow)"
+          class="bubble" data-name="Ferguson (FERG)" data-pro="~100%" data-int="Pure-play distribution" data-pe="18–22x" data-mkt="~$51B"/>
+        <text x="537" y="99" font-family="DM Sans" font-size="10.5" font-weight="700" fill="white" text-anchor="middle">Ferguson</text>
+        <text x="537" y="112" font-family="DM Sans" font-size="8.5" fill="rgba(255,255,255,0.9)" text-anchor="middle">18–22x P/E</text>
+
+        <!-- Builders FirstSource: Pro=100%, Int=High → x=88, y=72 -->
+        <circle cx="631" cy="130" r="22" fill="#00695C" opacity="0.82" filter="url(#shadow)"
+          class="bubble" data-name="Builders FirstSource (BLDR)" data-pro="~100%" data-int="Mfg + Distribution" data-pe="15–19x" data-mkt="~$12B"/>
+        <text x="631" y="125" font-family="DM Sans" font-size="8.5" font-weight="700" fill="white" text-anchor="middle">BLDR</text>
+        <text x="631" y="136" font-family="DM Sans" font-size="7.5" fill="rgba(255,255,255,0.85)" text-anchor="middle">15–19x</text>
+
+        <!-- SRS (now part of HD): Pro=100%, Int=Very High → x=82, y=85 -->
+        <circle cx="575" cy="80" r="16" fill="#E65100" opacity="0.75" filter="url(#shadow)"
+          class="bubble" data-name="SRS Distribution (HD subsidiary)" data-pro="~100% (roofing/landscaping)" data-int="Very High" data-pe="acq. @ 16.1x EBITDA" data-mkt="$18.25B acqd."/>
+        <text x="575" y="76" font-family="DM Sans" font-size="7.5" font-weight="700" fill="white" text-anchor="middle">SRS</text>
+        <text x="575" y="86" font-family="DM Sans" font-size="6.5" fill="rgba(255,255,255,0.8)" text-anchor="middle">(HD sub)</text>
+
+        <!-- Fastenal: Pro=~90%, Int=High → x=75, y=88 -->
+        <circle cx="680" cy="95" r="20" fill="#1565C0" opacity="0.75" filter="url(#shadow)"
+          class="bubble" data-name="Fastenal (FAST)" data-pro="~90% commercial" data-int="High (On-site vending)" data-pe="~34x" data-mkt="~$45B"/>
+        <text x="680" y="91" font-family="DM Sans" font-size="8" font-weight="700" fill="white" text-anchor="middle">Fastenal</text>
+        <text x="680" y="101" font-family="DM Sans" font-size="7" fill="rgba(255,255,255,0.85)" text-anchor="middle">34x P/E</text>
+
+        <!-- Menards: x=35, y=35 -->
+        <circle cx="188" cy="315" r="16" fill="#8B4513" opacity="0.65" filter="url(#shadow)"
+          class="bubble" data-name="Menards" data-pro="~25%" data-int="Low" data-pe="Private" data-mkt="Private"/>
+        <text x="188" y="312" font-family="DM Sans" font-size="7.5" font-weight="600" fill="white" text-anchor="middle">Menards</text>
+        <text x="188" y="322" font-family="DM Sans" font-size="6.5" fill="rgba(255,255,255,0.8)" text-anchor="middle">Private</text>
+
+        <!-- True Value: x=18, y=22 -->
+        <circle cx="126" cy="350" r="10" fill="#C62828" opacity="0.6" filter="url(#shadow)"
+          class="bubble" data-name="True Value" data-pro="~20%" data-int="Low" data-pe="Private" data-mkt="~Private"/>
+        <text x="126" y="347" font-family="DM Sans" font-size="7" font-weight="600" fill="white" text-anchor="middle">True</text>
+        <text x="126" y="356" font-family="DM Sans" font-size="7" fill="rgba(255,255,255,0.8)" text-anchor="middle">Value</text>
+
+        <!-- GMS (acqd) -->
+        <circle cx="510" cy="155" r="18" fill="#558B2F" opacity="0.65" filter="url(#shadow)"
+          class="bubble" data-name="GMS Inc. (acquired by HD/SRS)" data-pro="~95% (drywall/ceilings)" data-int="High distribution" data-pe="acq. @ 12–13x EBITDA" data-mkt="$5.5B acqd."/>
+        <text x="510" y="151" font-family="DM Sans" font-size="7.5" font-weight="600" fill="white" text-anchor="middle">GMS</text>
+        <text x="510" y="161" font-family="DM Sans" font-size="6.5" fill="rgba(255,255,255,0.8)" text-anchor="middle">(acqd.)</text>
+
+        <!-- Beacon (acqd by QXO) -->
+        <circle cx="600" cy="160" r="18" fill="#4527A0" opacity="0.65" filter="url(#shadow)"
+          class="bubble" data-name="Beacon Roofing Supply (acqd. by QXO)" data-pro="~100% roofing" data-int="High distribution" data-pe="acq. @ ~10x EBITDA" data-mkt="$11B acqd."/>
+        <text x="600" y="156" font-family="DM Sans" font-size="7.5" font-weight="600" fill="white" text-anchor="middle">Beacon</text>
+        <text x="600" y="166" font-family="DM Sans" font-size="6.5" fill="rgba(255,255,255,0.8)" text-anchor="middle">(acqd.)</text>
+
+        <!-- Valuation Gap annotation -->
+        <line x1="265" y1="230" x2="312" y2="200" stroke="#CC0000" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+        <rect x="278" y="240" width="100" height="28" rx="4" fill="#CC0000" opacity="0.08"/>
+        <text x="328" y="252" font-family="DM Sans" font-size="8.5" font-weight="700" fill="#CC0000" text-anchor="middle">~4–5x P/E Gap</text>
+        <text x="328" y="263" font-family="DM Sans" font-size="7.5" fill="#CC0000" text-anchor="middle">= ~19% upside</text>
+
+        <!-- Bubble size key -->
+        <text x="680" y="400" font-family="DM Sans" font-size="8" fill="#8C8C8C" text-anchor="middle">Bubble size ≈</text>
+        <text x="680" y="412" font-family="DM Sans" font-size="8" fill="#8C8C8C" text-anchor="middle">Market Cap</text>
+        <circle cx="680" cy="432" r="6" fill="#8C8C8C" opacity="0.3"/>
+        <circle cx="700" cy="432" r="10" fill="#8C8C8C" opacity="0.3"/>
+        <circle cx="724" cy="432" r="15" fill="#8C8C8C" opacity="0.3"/>
+      </svg>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+      <!-- VALUATION BRIDGE -->
+      <div>
+        <div class="panel-section-title">Valuation Bridge</div>
+        <div class="val-bridge">
+          <div class="val-row current">
+            <div class="label">LOW Current<br><small style="font-size:9px;color:#8C8C8C">Cyclical Retail multiple</small></div>
+            <div class="pe">21.0x</div>
+            <div class="delta" style="color:#CC0000">Base</div>
+          </div>
+          <div class="val-row" style="padding:4px 0;">
+            <div class="label">+ Pro Mix Re-Rating<br><small style="font-size:9px;color:#8C8C8C">19%→36% shift, less cyclicality</small></div>
+            <div class="pe" style="color:#2E7D32">+1.5x</div>
+            <div class="delta" style="color:#2E7D32">↑</div>
+          </div>
+          <div class="val-row" style="padding:4px 0;">
+            <div class="label">+ Vertical Integration<br><small style="font-size:9px;color:#8C8C8C">530 branches, managed accounts</small></div>
+            <div class="pe" style="color:#2E7D32">+1.0x</div>
+            <div class="delta" style="color:#2E7D32">↑</div>
+          </div>
+          <div class="val-row" style="padding:4px 0;">
+            <div class="label">+ Non-Discretionary Mix<br><small style="font-size:9px;color:#8C8C8C">~60% R&M, commercial contracts</small></div>
+            <div class="pe" style="color:#2E7D32">+0.5x</div>
+            <div class="delta" style="color:#2E7D32">↑</div>
+          </div>
+          <div class="val-row" style="padding:4px 0;">
+            <div class="label">− Execution / Integration Risk<br><small style="font-size:9px;color:#8C8C8C">Margin dilution FY2026</small></div>
+            <div class="pe" style="color:#CC0000">−0.5x</div>
+            <div class="delta" style="color:#CC0000">↓</div>
+          </div>
+          <div class="val-row delta-row">
+            <div class="label">Target Re-Rated Multiple</div>
+            <div class="pe">~25x</div>
+            <div class="delta" style="color:#B8963E">+4.0x</div>
+          </div>
+          <div class="implied-upside">
+            <div class="big">~19%</div>
+            <div class="sub">Implied Stock Upside<br>at Consensus FY2026 EPS ~$12.50</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BARRIERS TO IMITABILITY -->
+      <div>
+        <div class="panel-section-title">3 Barriers to Imitability</div>
+        <div class="barriers">
+          <div class="barrier-card">
+            <div class="barrier-num">Barrier 01</div>
+            <div class="barrier-title">Interior-Specific Installer Network (ADG)</div>
+            <div class="barrier-body">ADG's 3,200+ specialized interior installers took decades to recruit and certify. Amazon cannot replicate trade labor at scale; HD's SRS is exterior-focused (roofing, landscaping) — creating an uncrowded interior finish vertical.</div>
+          </div>
+          <div class="barrier-card">
+            <div class="barrier-num">Barrier 02</div>
+            <div class="barrier-title">Drywall Distribution Network Density (FBM)</div>
+            <div class="barrier-body">FBM's 370+ branches serve ~40,000 Pro accounts with next-day jobsite delivery of heavy, low-margin drywall/framing products. The economics favor incumbent density — building a competing branch network requires $2–3B+ capex and 5–7 years of relationship-building.</div>
+          </div>
+          <div class="barrier-card">
+            <div class="barrier-num">Barrier 03</div>
+            <div class="barrier-title">Combined Data Moat: Retail + Distribution + Install</div>
+            <div class="barrier-body">Lowe's uniquely captures the full project lifecycle — design selection, materials purchase, distribution, and installation — creating a purchasing data loop no pure retailer (HD is exterior-heavy) or pure distributor (Ferguson is trade-only) can replicate across the interior finish category.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEGEND -->
+      <div>
+        <div class="panel-section-title">Company Index</div>
+        <div class="legend-grid">
+          <div class="legend-item"><div class="legend-dot" style="background:#004990"></div><span>Lowe's '26 (Current)</span><small>~21x</small></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#B8963E"></div><span>Lowe's '30 (Target)</span><small>~25x</small></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#90CAF9;border:1px dashed #1565C0"></div><span>Lowe's '18 (Baseline)</span><small>~14x</small></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#F96302"></div><span>Home Depot</span><small>~25x</small></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2E7D32"></div><span>Ferguson (FERG)</span><small>18–22x</small></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#00695C"></div><span>Builders FirstSource</span><small>15–19x</small></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#1565C0"></div><span>Fastenal</span><small>~34x</small></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#131921"></div><span>Amazon</span><small>35–40x</small></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#455A64"></div><span>Walmart / Target</span><small>22–24x</small></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#6D1F1F"></div><span>Ace Hardware</span><small>Private</small></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#558B2F;opacity:0.7"></div><span>GMS / Beacon / SRS</span><small>Acquired</small></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-note">Source: Company earnings releases, PR Newswire, StockAnalysis, Bloomberg consensus estimates. Bubble sizes are illustrative of relative market cap scale. Forward P/E based on Feb 27, 2026 prices.</div>
+    <div class="footer-conf">Confidential · Draft for Discussion</div>
+  </div>
+
+</div><!-- /slide -->
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-row"><span>Pro Revenue Mix</span><strong id="tt-pro"></strong></div>
+  <div class="tt-row"><span>Integration Depth</span><strong id="tt-int"></strong></div>
+  <div class="tt-row"><span>Forward P/E</span><strong id="tt-pe"></strong></div>
+  <div class="tt-row"><span>Market Cap</span><strong id="tt-mkt"></strong></div>
+</div>
+
+<script>
+  const tooltip = document.getElementById('tooltip');
+  const ttName = document.getElementById('tt-name');
+  const ttPro = document.getElementById('tt-pro');
+  const ttInt = document.getElementById('tt-int');
+  const ttPe = document.getElementById('tt-pe');
+  const ttMkt = document.getElementById('tt-mkt');
+
+  document.querySelectorAll('.bubble').forEach(el => {
+    el.style.cursor = 'pointer';
+
+    el.addEventListener('mouseenter', (e) => {
+      ttName.textContent = el.dataset.name;
+      ttPro.textContent = el.dataset.pro;
+      ttInt.textContent = el.dataset.int;
+      ttPe.textContent = el.dataset.pe;
+      ttMkt.textContent = el.dataset.mkt;
+      tooltip.classList.add('visible');
+    });
+
+    el.addEventListener('mousemove', (e) => {
+      const x = e.clientX + 16;
+      const y = e.clientY - 10;
+      const tw = tooltip.offsetWidth;
+      const th = tooltip.offsetHeight;
+      tooltip.style.left = (x + tw > window.innerWidth ? e.clientX - tw - 10 : x) + 'px';
+      tooltip.style.top = (y + th > window.innerHeight ? e.clientY - th : y) + 'px';
+    });
+
+    el.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('visible');
+    });
+  });
+</script>
+</body>
+</html>
